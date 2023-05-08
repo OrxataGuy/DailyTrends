@@ -32,7 +32,7 @@ class ValenciaPlazaFeed extends Feed
 
                 if($body && $source)
                 {
-                    dump([
+                    Feed::create([
                         'title' => $title,
                         'body' => $body,
                         'image' => "https://valenciaplaza.com$image",
