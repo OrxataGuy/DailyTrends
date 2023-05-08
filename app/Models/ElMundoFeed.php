@@ -4,20 +4,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Goutte\Client;
 
-class MarcaFeed extends Feed
+class ElMundoFeed extends Feed
 {
     use HasFactory;
 
     public static function feed (Client $scrapper)
     {
-        $endpoints =  $scrapper->request('GET', "https://www.marca.com")
+        $endpoints =  $scrapper->request('GET', "https://www.elmundo.es")
         ->filter('article>div>div>header>a')->each(function ($node) {
             $endpoint = $node->attr('href');
-            if (str_contains($endpoint, "https://www.marca.com")) return $endpoint;
+            if (str_contains($endpoint, "https://www.elmundo.es")) return $endpoint;
             return "";
         });
-
-        $publisher = "MARCA.COM";
+        $publisher = "ELMUNDO.ES";
         foreach($endpoints as $url)
         {
             $source = $url;

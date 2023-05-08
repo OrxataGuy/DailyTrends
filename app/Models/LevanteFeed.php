@@ -4,20 +4,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Goutte\Client;
 
-class MarcaFeed extends Feed
+class LevanteFeed extends Feed
 {
     use HasFactory;
 
     public static function feed (Client $scrapper)
     {
-        $endpoints =  $scrapper->request('GET', "https://www.marca.com")
-        ->filter('article>div>div>header>a')->each(function ($node) {
+        $endpoints =  $scrapper->request('GET', "https://www.levante-emv.com")
+        ->filter('article>header>a.new__headline')->each(function ($node) {
             $endpoint = $node->attr('href');
-            if (str_contains($endpoint, "https://www.marca.com")) return $endpoint;
+            if (!str_contains($endpoint, "https://")) return "https://www.levante-emv.com$endpoint";
             return "";
         });
+        $publisher = "LEVANTE";
 
-        $publisher = "MARCA.COM";
         foreach($endpoints as $url)
         {
             $source = $url;
@@ -25,10 +25,10 @@ class MarcaFeed extends Feed
             {
                 $crawler = $scrapper->request('GET', $url);
                 $title = self::getText($crawler->filter('h1'));
-                $summary = self::getText($crawler->filter('.ue-c-article__standfirst'));
+                $summary = self::getText($crawler->filter('h2'));
                 $image = self::getSource($crawler->filter('picture>img'));
                 if (!$image) $image = self::getSource($crawler->filter('img'), 1);
-                $body = self::getHtml($crawler->filter('.ue-c-article__body'));
+                $body = self::getHtml($crawler->filter('.article-body'));
 
                 if($body && $source)
                 {

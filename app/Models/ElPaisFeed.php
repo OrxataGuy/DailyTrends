@@ -4,31 +4,32 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Goutte\Client;
 
-class MarcaFeed extends Feed
+class ElPaisFeed extends Feed
 {
     use HasFactory;
 
     public static function feed (Client $scrapper)
     {
-        $endpoints =  $scrapper->request('GET', "https://www.marca.com")
-        ->filter('article>div>div>header>a')->each(function ($node) {
+        $endpoints =  $scrapper->request('GET', "https://elpais.com")
+        ->filter('article>header>h2>a')->each(function ($node) {
             $endpoint = $node->attr('href');
-            if (str_contains($endpoint, "https://www.marca.com")) return $endpoint;
+            if (str_contains($endpoint, "https://elpais.com")) return $endpoint;
             return "";
         });
 
-        $publisher = "MARCA.COM";
+        $publisher = "ELPAIS.COM";
         foreach($endpoints as $url)
         {
             $source = $url;
+
             if(!Feed::where('source', '=', $source)->exists())
             {
                 $crawler = $scrapper->request('GET', $url);
                 $title = self::getText($crawler->filter('h1'));
-                $summary = self::getText($crawler->filter('.ue-c-article__standfirst'));
-                $image = self::getSource($crawler->filter('picture>img'));
+                $summary = self::getText($crawler->filter('h2'));
+                $image = self::getSource($crawler->filter('figure>img'));
                 if (!$image) $image = self::getSource($crawler->filter('img'), 1);
-                $body = self::getHtml($crawler->filter('.ue-c-article__body'));
+                $body = self::getHtml($crawler->filter('.clearfix'));
 
                 if($body && $source)
                 {

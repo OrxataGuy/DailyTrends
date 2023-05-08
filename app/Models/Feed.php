@@ -11,21 +11,21 @@ class Feed extends Model
 
     protected $fillable = ['title', 'body', 'image', 'source', 'publisher', ];
 
-    protected static function getText(mixed $filter, $ifnull="") : string
+    protected static function getText(mixed $filter, $alt="") : string
     {
-        if($filter->getNode(0)) return $filter->text();
-        return $ifnull;
+        if($filter->getNode(0)) return mb_convert_encoding($filter->text(), "UTF-8", mb_detect_encoding($filter->text()));
+        return $alt;
     }
 
-    protected static function getSource(mixed $filter) : string
+    protected static function getSource(mixed $filter, $node=0) : string
     {
-        if($filter->getNode(0)) return $filter->attr('src');
+        if($filter->getNode($node)) return $filter->getNode($node)->getAttribute('src');
         return "";
     }
 
     protected static function getHtml(mixed $filter) : string
     {
-        if($filter->getNode(0)) return $filter->html();
+        if($filter->getNode(0)) return mb_convert_encoding($filter->html(), "UTF-8", mb_detect_encoding($filter->html()));
         return "";
     }
 

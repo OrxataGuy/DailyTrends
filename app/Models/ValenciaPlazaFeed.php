@@ -4,20 +4,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Goutte\Client;
 
-class MarcaFeed extends Feed
+class ValenciaPlazaFeed extends Feed
 {
     use HasFactory;
 
     public static function feed (Client $scrapper)
     {
-        $endpoints =  $scrapper->request('GET', "https://www.marca.com")
-        ->filter('article>div>div>header>a')->each(function ($node) {
+        $endpoints =  $scrapper->request('GET', "https://valenciaplaza.com")
+        ->filter('article>div>h2>a')->each(function ($node) {
             $endpoint = $node->attr('href');
-            if (str_contains($endpoint, "https://www.marca.com")) return $endpoint;
+            if (!str_contains($endpoint, "https://")) return "https://valenciaplaza.com$endpoint";
             return "";
         });
 
-        $publisher = "MARCA.COM";
+        $publisher = "VALENCIAPLAZA";
+
         foreach($endpoints as $url)
         {
             $source = $url;
@@ -25,17 +26,16 @@ class MarcaFeed extends Feed
             {
                 $crawler = $scrapper->request('GET', $url);
                 $title = self::getText($crawler->filter('h1'));
-                $summary = self::getText($crawler->filter('.ue-c-article__standfirst'));
-                $image = self::getSource($crawler->filter('picture>img'));
+                $image = self::getSource($crawler->filter('.image'));
                 if (!$image) $image = self::getSource($crawler->filter('img'), 1);
-                $body = self::getHtml($crawler->filter('.ue-c-article__body'));
+                $body = self::getHtml($crawler->filter('.html-content'));
 
                 if($body && $source)
                 {
-                    Feed::create([
+                    dump([
                         'title' => $title,
-                        'body' => "<h2>$summary</h2>$body",
-                        'image' => $image,
+                        'body' => $body,
+                        'image' => "https://valenciaplaza.com$image",
                         'source' => $source,
                         'publisher' => $publisher
                     ]);
