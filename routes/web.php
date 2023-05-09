@@ -20,4 +20,4 @@ Route::group(['prefix' =>'{publisher}/{id}'], function() {
     Route::get('/', [Main::class, 'post'])->name('post.view');
     Route::get('update', [Main::class, 'post'])->name('post.update');
 });
-Route::resource('post', Feed::class);
+Route::resource('post', Feed::class)->only('create', 'store', 'show', 'edit', 'update','destroy');
