@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         @include('template.styles')
         @yield('styles')
@@ -20,6 +21,12 @@
     <!-- End wrappage -->
     </div>
     @include('template.scripts')
+    <script>
+        $.ajaxSetup({
+            headers:
+            { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
+    </script>
     @yield('scripts')
     </body>
 </html>

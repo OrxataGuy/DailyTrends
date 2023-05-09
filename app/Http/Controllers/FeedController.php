@@ -3,17 +3,37 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use \Illuminate\Http\JsonResponse;
+use \Illuminate\Contracts\View\View;
+use App\Models\Feed;
+
+
 
 class FeedController extends Controller
 {
     /**
      * Show the form for creating a new resource.
-     *rtew
+     *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+
+    public function create() : View
     {
-        //
+        return view();
+    }
+
+
+    public function list() : JsonResponse
+    {
+        $feeds = Feed::whereHas('publisher', function($publisher) {
+            $publisher->where('enabled', 1);
+        })
+        ->inRandomOrder()
+        ->get();
+        return response()->json(array(
+            'status' => 200,
+            'value' => $feeds
+        ));
     }
 
     /**
@@ -22,9 +42,11 @@ class FeedController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
-        //
+        return response()->json(array(
+            'status' => 200
+        ));
     }
 
     /**
@@ -33,9 +55,11 @@ class FeedController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id) : JsonResponse
     {
-        //
+        return response()->json(array(
+            'status' => 200
+        ));
     }
 
     /**
@@ -44,9 +68,9 @@ class FeedController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id) : View
     {
-        //
+        return view();
     }
 
     /**
@@ -56,9 +80,11 @@ class FeedController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id) : JsonResponse
     {
-        //
+        return response()->json(array(
+            'status' => 200
+        ));
     }
 
     /**
@@ -67,8 +93,10 @@ class FeedController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id) : JsonResponse
     {
-        //
+        return response()->json(array(
+            'status' => 200
+        ));
     }
 }

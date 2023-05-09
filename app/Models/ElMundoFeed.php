@@ -2,20 +2,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Goutte\Client;
 
 class ElMundoFeed extends Feed
 {
     use HasFactory;
 
-    public function getFeed (Client $scrapper, Publisher $publisher)
+    public function loadFeed (Client $scrapper, Publisher $publisher)
     {
         $endpoints =  $scrapper->request('GET', $publisher->site)
-        ->filter('article>div>div>header>a')->each(function ($node) use ($publisher)  {
+        ->filter('.ue-c-cover-content__link')->each(function ($node) use ($publisher)  {
             $endpoint = $node->attr('href');
-            if (str_contains($endpoint, $publisher->site)) return $endpoint;
+            if (str_contains($endpoint, $publisher->site) && str_contains($endpoint, now()->format('Y/m/d'))) return $endpoint;
             return "";
         });
+
 
         foreach($endpoints as $url)
         {
@@ -31,18 +33,22 @@ class ElMundoFeed extends Feed
 
                 if($body && $source)
                 {
-                    Feed::create([
-                        'title' => $title,
-                        'body' => "<h2>$summary</h2>$body",
-                        'image' => $image,
-                        'source' => $source,
-                        'publisher' => $publisher->name,
-                        'publisher_id' => $publisher->id
-                    ]);
+                    try
+                    {
+                        Feed::create([
+                            'title' => $title,
+                            'body' => "<h2>$summary</h2>$body",
+                            'image' => $image,
+                            'source' => $source,
+                            'publisher' => $publisher->name,
+                            'publisher_id' => $publisher->id
+                        ]);
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        error_log("No he podido poner esta noticia de $publisher->name porque es demasiado grande: $source");
+                    }
                 }
             }
         }
-
-        return $publisher->lastNews($scrapper);
     }
 }

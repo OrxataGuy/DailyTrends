@@ -12,10 +12,9 @@ class Publisher extends Model
 
     protected $fillable = ['site', 'name', 'enabled'];
 
-    public function lastNews(Client $scrapper) {
-        return $this->feeds()->count() > 0 ?
-            $this->feeds()->where('updated_at', '>', now()->subDay(1)->toDateTimeString())->get() :
-            Feed::resolveFeed($this)->getFeed($scrapper, $this);
+    public function loadFeed(Client $scrapper)
+    {
+        Feed::resolveFeed($this)->loadFeed($scrapper, $this);
     }
 
     public function feeds() {

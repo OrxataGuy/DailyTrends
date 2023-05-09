@@ -9,13 +9,14 @@ class Feed extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'body', 'image', 'source', 'publisher', ];
+    protected $fillable = ['title', 'body', 'image', 'source', 'publisher', 'publisher_id'];
+    protected $table = 'feeds';
 
     public static function resolveFeed(Publisher $publisher) : Feed
     {
         switch($publisher->name)
         {
-            case 'As': return new AsFeed;
+            case 'AS': return new AsFeed;
             case 'ElMundo': return new ElMundoFeed;
             case 'ElPais': return new ElPaisFeed;
             case 'Levante': return new LevanteFeed;

@@ -1632,7 +1632,7 @@ ul.bastian li p span {
 /****/
 /** elements mixins **/
 /**
-* Transition-timing-function property@mixin 
+* Transition-timing-function property@mixin
 */
 /*background RGBA
 ============================================*/
@@ -8924,7 +8924,7 @@ nav.pagination .next:hover i, nav.pagination .prev:hover i {
 }
 
 .post-item.cat-1 .lable {
-  background: #f4b711;
+  background: #FA5633;
 }
 
 .post-item.cat-2 .lable {
@@ -8932,19 +8932,23 @@ nav.pagination .next:hover i, nav.pagination .prev:hover i {
 }
 
 .post-item.cat-3 .lable {
-  background: #01c181;
+  background: #2C7AD8;
 }
 
 .post-item.cat-4 .lable {
-  background: #e0437c;
+  background: #5588C6;
 }
 
 .post-item.cat-5 .lable {
-  background: #82b53c;
+  background: #C65555;
 }
 
-.post-item.cat-5 .lable {
-  background: #82b53c;
+.post-item.cat-6 .lable {
+  background: #56DD4E;
+}
+
+.post-item.cat-7 .lable {
+    background: #4ED9DD;
 }
 
 .post-item.video {
