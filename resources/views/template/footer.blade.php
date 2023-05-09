@@ -87,7 +87,7 @@
             <div class="border-top1">
             <div class="border-top2">
                 <div class="float-left">
-                    <a class="logo-footer" href="#" title="Logo"><img src="assets/images/logo-footer2.png" alt="logo"></a>
+                    <a class="logo-footer" href="#" title="Logo"><img src="{{ env('app_url') }}/assets/images/logo-footer2.png" alt="logo"></a>
                     <p>Copyright &copy;2016 by <a href="#" title="title">TodayExpress</a>. Proudly powered by <a href="#" title="title">EngoTheme</a></p>
                 </div>
                 <div class="float-right align-right">
