@@ -28,6 +28,7 @@ class FeedController extends Controller
         $feeds = Feed::whereHas('publisher', function($publisher) {
             $publisher->where('enabled', 1);
         })
+        ->where('deleted', 0)
         ->inRandomOrder()
         ->get();
         return response()->json(array(
@@ -70,7 +71,8 @@ class FeedController extends Controller
      */
     public function edit($id) : View
     {
-        return view();
+        $post = Feed::find($id);
+        return view('pages.writer', ['post' =>  $post]);
     }
 
     /**
@@ -95,6 +97,9 @@ class FeedController extends Controller
      */
     public function destroy($id) : JsonResponse
     {
+        $feed = Feed::find($id);
+        $feed->deleted = 1;
+        $feed->save();
         return response()->json(array(
             'status' => 200
         ));

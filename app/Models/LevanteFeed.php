@@ -26,8 +26,9 @@ class LevanteFeed extends Feed
                 $crawler = $scrapper->request('GET', $url);
                 $title = self::getText($crawler->filter('h1'));
                 $summary = self::getText($crawler->filter('h2'));
-                $image = self::getSource($crawler->filter('picture>img'));
-                if (!$image) $image = self::getSource($crawler->filter('img'), 1);
+                $image = self::getSource($crawler->filter('img.video-jw'));
+                $idx=0;
+                if (!$image) $image = self::getSource($crawler->filter('img[src*="prensaiberica.es"]'));
                 $body = self::getHtml($crawler->filter('.article-body'));
 
                 if($body && $source)

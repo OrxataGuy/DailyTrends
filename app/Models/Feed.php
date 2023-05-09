@@ -21,9 +21,30 @@ class Feed extends Model
             case 'ElPais': return new ElPaisFeed;
             case 'Levante': return new LevanteFeed;
             case 'Marca': return new MarcaFeed;
-            case 'ValenciaPlaza': return new ValenciaPlazaFeed;
+            case 'VPlaza': return new ValenciaPlazaFeed;
             default: return new DailyTrendsFeed;
         }
+    }
+
+    public function getNext() : Feed
+    {
+        $feed = Feed::find(Feed::where('id', '>', $this->id)->where('deleted', 0)->min('id'));
+        if($feed) return $feed;
+        return $this;
+    }
+
+    public function getPrevious() : Feed
+    {
+        $feed = Feed::find(Feed::where('id', '<', $this->id)->where('deleted', 0)->max('id'));
+        if($feed) return $feed;
+        return $this;
+    }
+
+    public function getRelated($number=1)
+    {
+        $feed = Feed::where('id', '<>', $this->id)->where('deleted', 0)->where('publisher_id', '=', $this->publisher_id)->inRandomOrder()->take($number)->get();
+        if($feed) return $feed;
+        return $this;
     }
 
     protected static function getText(mixed $filter, $alt="") : string

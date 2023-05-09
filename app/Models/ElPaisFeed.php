@@ -29,7 +29,7 @@ class ElPaisFeed extends Feed
                 $crawler = $scrapper->request('GET', $url);
                 $title = self::getText($crawler->filter('h1'));
                 $summary = self::getText($crawler->filter('h2'));
-                $image = self::getSource($crawler->filter('figure>img'));
+                $image = self::getSource($crawler->filter('img[srcset]'));
                 if (!$image) $image = self::getSource($crawler->filter('img'), 1);
                 $body = self::getHtml($crawler->filter('.clearfix'));
 

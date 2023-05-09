@@ -13,7 +13,9 @@
 
     <div class="wrappage">
         @include('template.header')
-       @include('template.breadcrumbwithopts')
+        @include('template.breadcrumb')
+
+
         <!-- End container -->
         @yield('content')
         @include('template.footer')

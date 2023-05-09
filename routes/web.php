@@ -23,3 +23,4 @@ Route::group(['prefix' =>'post/{id}'], function() {
 });
 Route::resource('post', Feed::class)->only('create', 'store', 'show', 'edit', 'update','destroy');
 Route::get('feed', [Feed::class, 'list'])->name('feed');
+Route::put('toggle', [Main::class, 'togglePublisher'])->name('toggle.publisher');

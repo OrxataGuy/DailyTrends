@@ -6499,8 +6499,32 @@ ul.tabs.tabs-title li span.count {
 }
 
 .single-post .cat-1 .label {
-  background: #209cc9;
+  background: #FA5633;
 }
+
+.single-post .cat-2 .label {
+    background: #209cc9;
+  }
+
+  .single-post .cat-3 .label {
+    background: #2C7AD8;
+  }
+
+  .single-post .cat-4 .label {
+    background: #5588C6;
+  }
+
+  .single-post .cat-5 .label {
+    background: #C65555;
+  }
+
+  .single-post .cat-6 .label {
+    background: #56DD4E;
+  }
+
+  .single-post .cat-7 .label {
+      background: #4ED9DD;
+  }
 
 .single-post .tag-cat {
   margin-top: 30px;
