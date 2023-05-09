@@ -8,16 +8,14 @@ class AsFeed extends Feed
 {
     use HasFactory;
 
-    public static function feed (Client $scrapper)
+    public function getFeed (Client $scrapper, Publisher $publisher)
     {
-        $endpoints =  $scrapper->request('GET', "https://as.com")
-        ->filter('a.mm__wr')->each(function ($node) {
+        $endpoints =  $scrapper->request('GET', $publisher->site)
+        ->filter('a.mm__wr')->each(function ($node) use ($publisher) {
             $endpoint = $node->attr('href');
-            if (str_contains($endpoint, "https://as.com")) return $endpoint;
+            if (str_contains($endpoint, $publisher->site)) return $endpoint;
             return "";
         });
-
-        $publisher = "AS.COM";
 
         foreach($endpoints as $url)
         {
@@ -39,12 +37,13 @@ class AsFeed extends Feed
                         'body' => "<h2>$summary</h2>$body",
                         'image' => $image,
                         'source' => $source,
-                        'publisher' => $publisher
+                        'publisher' => $publisher->name,
+                        'publisher_id' => $publisher->id
                     ]);
                 }
             }
         }
 
-        return Feed::where('publisher', '=', $publisher)->where('updated_at', '>', now()->subDay(1)->toDateTimeString())->get();
+        return $publisher->lastNews($scrapper);
     }
 }

@@ -8,16 +8,14 @@ class ValenciaPlazaFeed extends Feed
 {
     use HasFactory;
 
-    public static function feed (Client $scrapper)
+    public function getFeed (Client $scrapper, Publisher $publisher)
     {
-        $endpoints =  $scrapper->request('GET', "https://valenciaplaza.com")
-        ->filter('article>div>h2>a')->each(function ($node) {
+        $endpoints =  $scrapper->request('GET', $publisher->site)
+        ->filter('article>div>h2>a')->each(function ($node) use ($publisher) {
             $endpoint = $node->attr('href');
-            if (!str_contains($endpoint, "https://")) return "https://valenciaplaza.com$endpoint";
+            if (!str_contains($endpoint, "https://")) return $publisher->site.$endpoint;
             return "";
         });
-
-        $publisher = "VALENCIAPLAZA";
 
         foreach($endpoints as $url)
         {
@@ -32,17 +30,18 @@ class ValenciaPlazaFeed extends Feed
 
                 if($body && $source)
                 {
-                    dump([
+                    Feed::create([
                         'title' => $title,
                         'body' => $body,
-                        'image' => "https://valenciaplaza.com$image",
+                        'image' => $publisher->site.$image,
                         'source' => $source,
-                        'publisher' => $publisher
+                        'publisher' => $publisher->name,
+                        'publisher_id' => $publisher->id
                     ]);
                 }
             }
         }
 
-        return Feed::where('publisher', '=', $publisher)->where('updated_at', '>', now()->subDay(1)->toDateTimeString())->get();
+        return $publisher->lastNews($scrapper);
     }
 }

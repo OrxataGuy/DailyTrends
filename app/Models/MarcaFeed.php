@@ -8,16 +8,15 @@ class MarcaFeed extends Feed
 {
     use HasFactory;
 
-    public static function feed (Client $scrapper)
+    public function getFeed (Client $scrapper, Publisher $publisher)
     {
-        $endpoints =  $scrapper->request('GET', "https://www.marca.com")
-        ->filter('article>div>div>header>a')->each(function ($node) {
+        $endpoints =  $scrapper->request('GET', $publisher->site)
+        ->filter('article>div>div>header>a')->each(function ($node) use ($publisher)  {
             $endpoint = $node->attr('href');
-            if (str_contains($endpoint, "https://www.marca.com")) return $endpoint;
+            if (str_contains($endpoint, $publisher->site)) return $endpoint;
             return "";
         });
 
-        $publisher = "MARCA.COM";
         foreach($endpoints as $url)
         {
             $source = $url;
@@ -37,12 +36,13 @@ class MarcaFeed extends Feed
                         'body' => "<h2>$summary</h2>$body",
                         'image' => $image,
                         'source' => $source,
-                        'publisher' => $publisher
+                        'publisher' => $publisher->name,
+                        'publisher_id' => $publisher->id
                     ]);
                 }
             }
         }
 
-        return Feed::where('publisher', '=', $publisher)->where('updated_at', '>', now()->subDay(1)->toDateTimeString())->get();
+        return $publisher->lastNews($scrapper);
     }
 }

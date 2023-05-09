@@ -8,15 +8,14 @@ class LevanteFeed extends Feed
 {
     use HasFactory;
 
-    public static function feed (Client $scrapper)
+    public function getFeed (Client $scrapper, Publisher $publisher)
     {
-        $endpoints =  $scrapper->request('GET', "https://www.levante-emv.com")
-        ->filter('article>header>a.new__headline')->each(function ($node) {
+        $endpoints =  $scrapper->request('GET', $publisher->site)
+        ->filter('article>header>a.new__headline')->each(function ($node) use ($publisher)  {
             $endpoint = $node->attr('href');
-            if (!str_contains($endpoint, "https://")) return "https://www.levante-emv.com$endpoint";
+            if (!str_contains($endpoint, "https://")) return $publisher->site.$endpoint;
             return "";
         });
-        $publisher = "LEVANTE";
 
         foreach($endpoints as $url)
         {
@@ -37,7 +36,8 @@ class LevanteFeed extends Feed
                         'body' => "<h2>$summary</h2>$body",
                         'image' => $image,
                         'source' => $source,
-                        'publisher' => $publisher
+                        'publisher' => $publisher->name,
+                        'publisher_id' => $publisher->id
                     ]);
                 }
             }

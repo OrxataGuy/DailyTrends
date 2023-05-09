@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController as Main;
+use App\Http\Controllers\FeedController as Feed;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,3 +16,8 @@ use App\Http\Controllers\MainController as Main;
 */
 
 Route::get('/',[Main::class, 'index'])->name('index');
+Route::group(['prefix' =>'{publisher}/{id}'], function() {
+    Route::get('/', [Main::class, 'post'])->name('post.view');
+    Route::get('update', [Main::class, 'post'])->name('post.update');
+});
+Route::resource('post', Feed::class)->only('create', 'store', 'show', 'edit', 'update','destroy');
