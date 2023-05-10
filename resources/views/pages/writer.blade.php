@@ -13,16 +13,19 @@
                             <sub>Haciendo doble click sobre el título podrás editarlo.</sub>
                             <h3 contenteditable="true" id="post-title">{{ $post->title }}</h3>
                             <div class="input-group">
-                            <input type="text" class="form-control" style="width:70%" placeholder="URL de la imágen principal" />
+                            <input type="text" value="{{ $post->image }}" class="form-control" id="img-url" style="width:70%" placeholder="URL de la imágen principal" />
                                 <button class="btn btn-primary" style="height:47px;" onclick="call_upload_img()">Subir imagen</button>
                             </div>
-                            <input type="file" id="upload-img" style="display:none" />
+                            <form id="img-form" action="{{ route('upload') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="file" name="image" id="img-upload" style="display:none" />
+                            </form>
                         </div>
                        <div style="margin-bottom: 2em;">
                             <textarea class="post">{!! $post->body !!}</textarea>
                        </div>
                        <div class="align-right">
-                        <button class="btn btn-primary">Enviar artículo</button>
+                        <button class="btn btn-primary" onclick="submitPost()">Enviar artículo</button>
                        </div>
 
                     </div>
@@ -49,11 +52,62 @@
         });
     }
 
+    function submitPost() {
+        let body = $('.richText-editor')[0].innerHTML,
+        title = $('#post-title').text(),
+        image = $('#img-url').val();
+
+        $.ajax({
+            method: 'PUT',
+            url: "{{ route('article.update', ['article' => $post->id ]) }}",
+            data: {
+                body: body,
+                title: title,
+                image: image
+            },
+            success: e => Swal.fire({
+                title: 'Artículo editado correctamente',
+                text: 'La página se redirigirá a su artículo',
+                confirmButtonColor: '#db2e1c'
+            }).then(() => location.href = "{{ env('app_url') }}/post/{{$post->id}}")
+        });
+    }
+
     function call_upload_img() {
-        $("#upload-img").trigger("click");
+        $("#img-upload").trigger("click");
+    }
+
+    function prepareImageUploader() {
+        $('#img-form').on('submit',(function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        console.log(formData);
+
+        $.ajax({
+            type:'POST',
+            url: $(this).attr('action'),
+            data:formData,
+            cache:false,
+            contentType: false,
+            processData: false,
+            success:function(data){
+                if(data.status == 200)
+                $("#img-url").val(`{{ env('app_url') }}/images/${data.value}`)
+            },
+            error: function(data){
+                console.log("error");
+                console.log(data);
+            }
+        });
+    }));
+
+    $("#img-upload").on("change", function() {
+        $("#img-form").submit();
+    });
     }
 
     function initialize() {
+       prepareImageUploader();
 
         $('.post').richText({
 
@@ -61,12 +115,6 @@
             bold: true,
             italic: true,
             underline: true,
-
-            // text alignment
-            leftAlign: true,
-            centerAlign: true,
-            rightAlign: true,
-            justify: true,
 
             // lists
             ol: true,
@@ -193,7 +241,7 @@
             useSingleQuotes: false,
             height: 0,
             heightPercentage: 0,
-            id: "'post-body",
+            id: "post-body",
             class: "",
             useParagraph: true,
             maxlength: 0,

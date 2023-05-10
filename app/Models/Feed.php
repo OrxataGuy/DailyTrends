@@ -9,7 +9,7 @@ class Feed extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'body', 'image', 'source', 'publisher', 'publisher_id'];
+    protected $fillable = ['title', 'body', 'image', 'source', 'publisher', 'publisher_id', 'deleted'];
     protected $table = 'feeds';
 
     public static function resolveFeed(Publisher $publisher) : Feed

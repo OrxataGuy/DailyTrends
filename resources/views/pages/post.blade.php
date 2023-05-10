@@ -144,10 +144,10 @@
     function _deletePost(id) {
         $.ajax({
             method: 'DELETE',
-            url: "{{ route('post.destroy', ['post' => ':id']) }}".replace(':id', id),
+            url: "{{ route('article.destroy', ['article' => ':id']) }}".replace(':id', id),
             success: Swal.fire({
                 title: "Artículo borrado correctamente",
-                text: "Se te va a redirigir a la página de inicio",
+                text: "Se le va a redirigir a la página de inicio",
                 confirmButtonColor: '#db2e1c',
             }).then(e => {location.href = "{{ route('index') }}"}),
         });

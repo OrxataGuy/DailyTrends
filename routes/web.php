@@ -19,8 +19,8 @@ Route::get('/',[Main::class, 'index'])->name('index');
 Route::get('/test',[Main::class, 'tests'])->name('test');
 Route::group(['prefix' =>'post/{id}'], function() {
     Route::get('/', [Main::class, 'post'])->name('post.view');
-    Route::get('update', [Main::class, 'post'])->name('post.update');
 });
-Route::resource('post', Feed::class)->only('create', 'store', 'show', 'edit', 'update','destroy');
+Route::resource('article', Feed::class)->only('create', 'store', 'show', 'edit', 'update','destroy');
 Route::get('feed', [Feed::class, 'list'])->name('feed');
 Route::put('toggle', [Main::class, 'togglePublisher'])->name('toggle.publisher');
+Route::post('upload', [Main::class, 'upload'])->name('upload');

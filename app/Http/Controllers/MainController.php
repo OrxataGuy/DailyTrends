@@ -39,4 +39,18 @@ class MainController extends Controller
             'status' => 200
         ));
     }
+
+    public function upload(Request $request) : JsonResponse
+    {
+        $filename = time() . '.' . $request->image->extension();
+
+        $request->image->move(public_path('images'), $filename);
+
+        // save uploaded image filename here to your database
+
+        return response()->json(array(
+            'status' => 200,
+            'value' => $filename
+        ));
+    }
 }

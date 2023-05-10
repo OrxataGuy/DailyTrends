@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use \Illuminate\Http\JsonResponse;
 use \Illuminate\Contracts\View\View;
 use App\Models\Feed;
+use App\Models\Publisher;
 
 
 
@@ -17,9 +18,21 @@ class FeedController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function create() : View
+    public function create()
     {
-        return view();
+        $publisher = Publisher::find(2);
+
+        $feed = Feed::create([
+            'title' => "Escriba el título de su artículo",
+            'body' => "",
+            'image' => "",
+            'source' => env('app_url'),
+            'publisher' => $publisher->name,
+            'publisher_id' => $publisher->id,
+            'deleted' => 1
+        ]);
+
+        return redirect()->route('article.edit', ['article' => $feed->id]);
     }
 
 
@@ -84,6 +97,12 @@ class FeedController extends Controller
      */
     public function update(Request $request, $id) : JsonResponse
     {
+        $post = Feed::find($id);
+        $post->title = $request->get('title');
+        $post->body = $request->get('body');
+        $post->image = $request->get('image');
+        $post->deleted = 0;
+        $post->save();
         return response()->json(array(
             'status' => 200
         ));
