@@ -25,6 +25,10 @@ class MainController extends Controller
         return view('pages.post', ['post' => $post]);
     }
 
+    public function publisher(int $id) {
+        return view('pages.publisher', ['publisher_id' => $id]);
+    }
+
     public function tests() {
         Publisher::find(7)->loadFeed($this->scrapper);
     }

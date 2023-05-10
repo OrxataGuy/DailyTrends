@@ -10,3 +10,5 @@
     <script type="text/javascript" src="{{ env('app_url') }}/assets/js/store.js"></script>
     <script type="text/javascript" src="{{ env('app_url') }}/assets/js/sweetalert2.all.js"></script>
     <script type="text/javascript" src="{{ env('app_url') }}/assets/js/jquery.richtext.js"></script>
+    <script type="text/javascript" src="{{ env('app_url') }}/assets/js/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="{{ env('app_url') }}/assets/js/pagination.min.js"></script>

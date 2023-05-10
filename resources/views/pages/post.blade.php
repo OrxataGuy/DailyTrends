@@ -14,7 +14,7 @@
                         <h3>{{ $post->title }}</h3>
                         <div class="tag">
                             <p class="label">{{ $post->publisher }}</p>
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fas fa-calendar-alt"></i>{{ \Carbon\Carbon::parse($post->updated_at)->addHours(2)->translatedFormat('j \de F \de Y') }}</p>
                         </div>
 
                         {!! $post->body !!}
@@ -56,6 +56,7 @@
                                 </div>
                                 <div class="text">
                                     <h2><a href="" title="title">{{ $related->title }}</a></h2>
+                                    <p>{!! substr(strip_tags($related->body),0, 100) !!}...</p>
                                     <div class="tag">
                                         <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
                                     </div>
@@ -161,7 +162,7 @@
                     <div class="text">
                         <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
                         <div class="tag">
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fa fa-clock-o"></i>${moment(feed.updated_at).format('LL')}</p>
                         </div>
                     </div>
                 </div>`
@@ -173,11 +174,12 @@
                     <div class="text">
                         <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
                         <div class="tag">
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fas fa-calendar-alt"></i>${moment(feed.updated_at).format('LL')}</p>
                         </div>
                     </div>
                 </div>`
             };
+            console.log(feeds[0].updated_at)
             for(let i=0; i<count; i++)
                 if(i==0) $(container).append(templateFirst(feeds[i]))
                 else $(container).append(template(feeds[i]))

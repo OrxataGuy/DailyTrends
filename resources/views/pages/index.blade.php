@@ -8,9 +8,16 @@
                 <a href="#" title="Página principal">Página principal</a>
             </li>
             @foreach(\App\Models\Publisher::all() as $publisher)
+            @if($publisher->enabled == 1)
             <li class="level1 hover-menu">
-                <a href="#" title="{{ $publisher->site }}">{{ $publisher->name }}</a>
+                <a href="{{ env('app_url') }}/publisher/{{ $publisher->id }}" title="{{ $publisher->site }}">{{ $publisher->name }}</a>
             </li>
+            @else
+            <li class="level1 hover-menu unloaded" style="background-color:lightgray">
+                <a href="#">{{ $publisher->name }}</a>
+            </li>
+            @endif
+
             @endforeach
             <li class="level1 hover-menu pull-right">
                 <a href="{{ route('article.create') }}" class="btn btn-primary">Crear artículo</a>
@@ -75,6 +82,13 @@
 
 @section('styles')
 <style>
+
+    .mega-menu ul.navbar-nav li.level1.unloaded:hover:before {
+        display:none;
+    }
+    .mega-menu ul.navbar-nav li.level1.unloaded>a {
+        color:gray;
+    }
     img.img-middle {
         width: 36em;
         max-height: 20em;
@@ -136,7 +150,7 @@
                     <div class="text">
                         <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
                         <div class="tag">
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fas fa-calendar-alt"></i>${moment(feed.updated_at).format('LL')}</p>
                         </div>
                     </div>`;
             },
@@ -146,22 +160,22 @@
                     <div class="text">
                         <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
                         <div class="tag">
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fas fa-calendar-alt"></i>${moment(feed.updated_at).format('LL')}</p>
                         </div>
                     </div>`;
             };
 
 
         first.toArray().forEach(e => {
-            $(e).html(templateP(feeds[0]))
+            $(e).append(templateP(feeds[0]))
             $(e).addClass('cat-'+feeds[0].publisher_id)
         });
         second.toArray().forEach(e => {
-            $(e).html(template(feeds[1]))
+            $(e).append(template(feeds[1]))
             $(e).addClass('cat-'+feeds[1].publisher_id)
         });
         third.toArray().forEach(e => {
-            $(e).html(template(feeds[2]))
+            $(e).append(template(feeds[2]))
             $(e).addClass('cat-'+feeds[2].publisher_id)
         });
     }
@@ -178,7 +192,7 @@
                     <div class="text">
                         <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
                         <div class="tag">
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fas fa-calendar-alt"></i>${moment(feed.updated_at).format('LL')}</p>
                         </div>
                     </div>
                 </div>`;
@@ -199,7 +213,7 @@
                     <div class="text">
                         <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
                         <div class="tag">
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fas fa-calendar-alt"></i>${moment(feed.updated_at).format('LL')}</p>
                         </div>
                     </div>
                 </div>`;
@@ -216,7 +230,7 @@
                     <div class="text">
                         <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
                         <div class="tag">
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fas fa-calendar-alt"></i>${moment(feed.updated_at).format('LL')}</p>
                         </div>
                     </div>
                 </div>`
@@ -229,7 +243,7 @@
                     <div class="text">
                         <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
                         <div class="tag">
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fas fa-calendar-alt"></i>${moment(feed.updated_at).format('LL')}</p>
                         </div>
                     </div>
                 </div>`

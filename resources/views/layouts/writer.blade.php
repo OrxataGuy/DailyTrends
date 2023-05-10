@@ -27,6 +27,7 @@
             headers:
             { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
+        moment.locale("{{ config('app.locale') }}")
     </script>
     @yield('scripts')
     </body>

@@ -50,6 +50,18 @@ class FeedController extends Controller
         ));
     }
 
+    public function listPublisher($id) : JsonResponse
+    {
+        $feeds = Feed::where('publisher_id', $id)
+        ->where('deleted', 0)
+        ->inRandomOrder()
+        ->get();
+        return response()->json(array(
+            'status' => 200,
+            'value' => $feeds
+        ));
+    }
+
     /**
      * Store a newly created resource in storage.
      *
