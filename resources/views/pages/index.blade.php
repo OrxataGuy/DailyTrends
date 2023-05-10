@@ -88,6 +88,12 @@
         height: 15.4em;
     }
 
+    img[src*="/assets/images/logo"] {
+        vertical-align: middle;
+        height: auto;
+        width: auto;
+    }
+
 @media (max-width : 320px) {
     img.main-primary {
         height: 33em;

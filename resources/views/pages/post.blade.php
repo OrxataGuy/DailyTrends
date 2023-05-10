@@ -87,7 +87,7 @@
         width: 50em;
     }
 
-    img[src*="/assets/images/logo.png"] {
+    img[src*="/assets/images/logo"] {
         vertical-align: middle;
         height: auto;
         width: auto;
