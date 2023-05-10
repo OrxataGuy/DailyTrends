@@ -1,64 +1,50 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Daily Trends
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Página web que recoge los artículos de varios periódicos digitales como son:
+- As
+- El Mundo
+- El País
+- Levante
+- Marca
+- Valencia Plaza
+Además de brindar al usuario el poder de modificar el contenido de los artículos recogidos en los mencionados medios digitales, e incluso crear artículos propios.
 
-## About Laravel
+## Instalación
+Para poder lanzar esta aplicación es necesario disponer de al menos:
+- PHP 8
+- Node 18.14
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Para instalarlo se deben de lanzar distintos comandos:
+```
+git clone https://github.com/OrxataGuy/DailyTrends
+cd DailyTrends 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+cp .env.example .env // Se deberá añadir información sobre la base de datos
+composer install // Instala dependencias de PHP
+php artisan key:generate // Genera una key única para la aplicación
+npm install // Instala dependencias de node
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+php artisan migrate // Crea las tablas de la aplicación en la base de datos introducida en el archivo .env
+php artisan db:seed // Crea los distintos publishers que utilizará la aplicación
 
-## Learning Laravel
+php artisan serve // Lanza la aplicación
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Una vez lanzado todo esto, cuando se ejecute el último comando, la aplicación será accesible desde `http://localhost:8000`.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Comandos
+Dado que la carga de noticias puede ser un poco tediosa al usuario, las noticias generalmente se cargan cada hora a través de un comando llamado `load:feed`,  el cual se puede lanzar de dos modos:
+- A través de un cron configurado para lanzarse cada hora, lanzando `php artisan load:feed`
+- A través de un cron que delegue el lanzamiento a la aplicación, lanzando `php artisan schedule:run` (Recomendado)
+Una vez se lance el comando, la aplicación se encargará de recoger los artículos nuevos de cada una de los medios que se encuentren habilitados por el usuario. Cuantos más medios de comunicación haya habilitados, más noticias cargará la aplicación. 
 
-## Laravel Sponsors
+## Funcionamiento
+Los medios son habilitables para el usuario a través de de un listado de medios que aparece en todo momento en la aplicación en la parte superior de la pantalla. Al hacer click sobre un medio deshabilitado, automáticamente este cargará los artículos del medio y la página se recargará. Una vez habilitado, puede deshabilitarse y a la próxima vez que se habilite el mismo día, si la aplicación detecta que ya ha cargado los artículos de ese medio, prescindirá de volver a cargarlos.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+A través de una navegación intuitiva, se puede navegar entre los distintos feeds de cada uno de los medios, existiendo una página principal que recoge algunos de los feeds de hoy, y dando al usuario la posibilidad de ir a un feed en concreto si lo desea.
 
-### Premium Partners
+Al borrar un artículo, este no se borrará, sino que se marcará como eliminado. Esto permite que cuando un usuario borra un artículo, este no vuelva a aparecer, ya que de no ser así la aplicación volvería a intentar cargarlo, siempre que sea del mismo día.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Cuando se cargan artículos nuevos, siempre se eliminan los artículos que llevan en la aplicación más de un día (tanto los cargados como los creados), esto se hace con el fín de mantener el control de los artículos que hay en la base de datos y evitar un sobrepoblamiento en cuestión de días.
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<!-- img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads" -->
