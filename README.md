@@ -47,4 +47,4 @@ Al borrar un artículo, este no se borrará, sino que se marcará como eliminado
 
 Cuando se cargan artículos nuevos, siempre se eliminan los artículos que llevan en la aplicación más de un día (tanto los cargados como los creados), esto se hace con el fín de mantener el control de los artículos que hay en la base de datos y evitar un sobrepoblamiento en cuestión de días.
 
-<!-- img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads" -->
+<img src="https://github.com/OrxataGuy/DailyTrends/blob/dev/flow-diagram.daily-trends.drawio.png?raw=true" alt="Diagrama de flujo de la aplicación">
