@@ -36,6 +36,7 @@ Una vez lanzado todo esto, cuando se ejecute el último comando, la aplicación 
 Dado que la carga de noticias puede ser un poco tediosa al usuario, las noticias generalmente se cargan cada hora a través de un comando llamado `load:feed`,  el cual se puede lanzar de dos modos:
 - A través de un cron configurado para lanzarse cada hora, lanzando `php artisan load:feed`
 - A través de un cron que delegue el lanzamiento a la aplicación, lanzando `php artisan schedule:run` (Recomendado)
+
 Una vez se lance el comando, la aplicación se encargará de recoger los artículos nuevos de cada una de los medios que se encuentren habilitados por el usuario. Cuantos más medios de comunicación haya habilitados, más noticias cargará la aplicación. 
 
 ## Funcionamiento
