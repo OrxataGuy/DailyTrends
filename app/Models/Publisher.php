@@ -15,6 +15,12 @@ class Publisher extends Model
     public function loadFeed(Client $scrapper)
     {
         Feed::resolveFeed($this)->loadFeed($scrapper, $this);
+        $this->clean();
+    }
+
+    private function clean() {
+        foreach($this->feeds()->where('updated_at','<',now()->subDays(1))->get() as $feed)
+            $feed->delete();
     }
 
     public function feeds() {

@@ -267,7 +267,7 @@
                     <div class="text">
                         <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
                         <div class="tag">
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fa fa-clock-o"></i>${moment(feed.updated_at).format('LL')}</p>
                         </div>
                     </div>
                 </div>`
@@ -279,7 +279,7 @@
                     <div class="text">
                         <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
                         <div class="tag">
-                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                            <p class="date"><i class="fa fa-clock-o"></i>${moment(feed.updated_at).format('LL')}</p>
                         </div>
                     </div>
                 </div>`

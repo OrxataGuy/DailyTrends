@@ -4,12 +4,12 @@
     <nav class="mega-menu">
         <!-- Brand and toggle get grouped for better mobile display -->
           <ul class="nav navbar-nav" id="navbar">
-            <li class="level1 hover-menu active">
-                <a href="#" title="Página principal">Página principal</a>
+            <li class="level1 hover-menu">
+                <a href="{{ env('app_url') }}" title="Página principal">Página principal</a>
             </li>
             @foreach(\App\Models\Publisher::all() as $publisher)
             @if($publisher->enabled == 1)
-            <li class="level1 hover-menu">
+            <li class="level1 hover-menu @if($publisher->id == $publisher_id) active @endif">
                 <a href="{{ env('app_url') }}/publisher/{{ $publisher->id }}" title="{{ $publisher->site }}">{{ $publisher->name }}</a>
             </li>
             @else
@@ -27,6 +27,8 @@
 
         <!-- End megamenu -->
 </header>
+
+
 <div class="home3-banner box space-30">
     <div class="container">
         <div class="row hidden-desktop">
@@ -64,14 +66,37 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-2">
-            <aside class="widget size-16 post-col box aside-left-news"></aside>
-        </div>
-        <!-- End col-md-2 -->
-        <div class="col-md-6">
-            <div class="slider-one-item box space-30 main-news"></div>
+        <div class="col-md-8">
+            <div class="single-post">
+                <div class="blog-post-item cat-1 box">
+                    <div class="title-v1 box">
+                        <h3>Todas las noticias</h3>
+                    </div>
+                    <div class="box center space-30">
+                        <nav class="pagination">
+                        </nav>
+                    </div>
+                    <!-- End title -->
+                    <div class="technnology box space-30" id="posts">
+
+
+                    </div>
+                    <!-- End technnology -->
+                </div>
+                <!-- End bogpost -->
+            </div>
+            <!-- End signle-post -->
+            <div class="box center float-left space-30">
+
+                <!-- End pagination -->
+            </div>
+            <!-- End float-left -->
         </div>
         @include('template.maylike')
+
+                </div>
+
+            </div>
     </div>
 </div>
 <!-- End container -->
@@ -82,7 +107,6 @@
 
 @section('styles')
 <style>
-
     .mega-menu ul.navbar-nav li.level1.unloaded:hover:before {
         display:none;
     }
@@ -108,6 +132,40 @@
         width: auto;
     }
 
+    li.paginationjs-page.J-paginationjs-page,
+    li.paginationjs-ellipsis.disabled,
+    li.paginationjs-prev.J-paginationjs-previous,
+    li.paginationjs-next.J-paginationjs-next,
+    li.paginationjs-prev,
+    li.paginationjs-next
+    {
+        cursor:pointer;
+    }
+
+    li.paginationjs-page.J-paginationjs-page>a,
+    li.paginationjs-ellipsis.disabled>a,
+    li.paginationjs-prev.disabled>a,
+    li.paginationjs-prev.J-paginationjs-previous>a,
+    li.paginationjs-prev>a,
+    li.paginationjs-next.disabled>a,
+    li.paginationjs-next.J-paginationjs-next>a,
+    li.paginationjs-next>a,
+    select.J-paginationjs-size-select {
+        font-size: x-large;
+        padding: 5px;
+    }
+
+    li.paginationjs-page.J-paginationjs-page>a:hover,
+    li.paginationjs-prev.J-paginationjs-previous>a:hover,
+    li.paginationjs-next.J-paginationjs-next>a:hover {
+        color:#db2e1c;
+        filter: brightness(130%)
+    }
+
+    li.paginationjs-page.J-paginationjs-page.active>a {
+        color:#db2e1c;
+    }
+
 @media (max-width : 320px) {
     img.main-primary {
         height: 33em;
@@ -126,7 +184,7 @@
     function loadFeed() {
         return $.ajax({
             method: 'GET',
-            url: "{{ route('feed') }}"
+            url: "{{ route('feed.for', ['id' => $publisher_id]) }}"
         });
     }
 
@@ -134,8 +192,7 @@
         loadFeed().then(res => {
             feeds = res.value;
             mountMainFeeds()
-            mountLeftFeeds()
-            mountMiddleFeeds()
+            mountPaginator()
             mountMayLikeFeeds()
         })
 
@@ -180,46 +237,42 @@
         });
     }
 
-    function mountLeftFeeds() {
-        const container = $(".aside-left-news")[0],
-            min=3,
-            count = 6,
-            template = feed => {
-                return `<div class="post-item ver3 overlay">
-                    <div class="wrap-images">
-                        <a class="images" href="{{ env('app_url') }}/post/${feed.id}" title="images"><img class='img-responsive' src="${feed.image}" alt="images"></a>
-                    </div>
-                    <div class="text">
-                        <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
-                        <div class="tag">
-                            <p class="date"><i class="fas fa-calendar-alt"></i>${moment(feed.updated_at).format('LL')}</p>
-                        </div>
-                    </div>
-                </div>`;
-            };
-
-        for(let i=0; i<count; i++)
-            $(container).append(template(feeds[min+i]))
+    function stipHtml(item) {
+        let tmp = document.createElement("DIV");
+        tmp.innerHTML = item;
+        return tmp.textContent || tmp.innerText || "";
     }
 
-    function mountMiddleFeeds() {
-        const container = $(".main-news")[0],
-            min=10,
-            count = 4,
-            template = feed => {
-                return `<div class="post-item cat-${feed.publisher_id} ver1 overlay">
-                    <span class="lable">${feed.publisher}</span>
-                    <a class="images" href="{{ env('app_url') }}/post/${feed.id}" title="images"><img class='img-responsive img-middle' src="${feed.image}" alt="images"></a>
-                    <div class="text">
-                        <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
-                        <div class="tag">
-                            <p class="date"><i class="fas fa-calendar-alt"></i>${moment(feed.updated_at).format('LL')}</p>
-                        </div>
-                    </div>
-                </div>`;
-            };
-            for(let i=0; i<count; i++)
-                $(container).append(template(feeds[min+i]))
+    function mountPaginator() {
+        console.log(feeds);
+        const template = (data) => {
+            let html = "";
+            data.forEach(feed => {
+                html += `<div class="post-item ver2">
+                            <a class="images" href="{{ env('app_url')}}/post/${feed.id}" title="images"><img class='img-responsive img-middle' src="${feed.image}" alt="images"></a>
+                            <div class="text">
+                                <h2><a href="" title="title">${feed.title}</a></h2>
+                                <div class="tag">
+                                    <p class="date"><i class="fas fa-calendar-alt"></i>${moment(feed.updated_at).format('LL')}</p>
+                                </div>
+                                <p class="description">${stipHtml(feed.body).trim().substring(0, 100)}...</p>
+                                <a class="read-more" href="#" title="readMore">Leer artículo</a>
+                            </div>
+                        </div>`
+            })
+            return html
+        }
+
+        $('.pagination').pagination({
+            dataSource: feeds,
+            pageSize: 2,
+            showSizeChanger: true,
+            callback: function(data, pagination) {
+                // template method of yourself
+                var html = template(data);
+                $("#posts").html(html);
+            }
+        })
     }
 
     function mountMayLikeFeeds() {

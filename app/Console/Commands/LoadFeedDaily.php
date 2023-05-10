@@ -20,7 +20,7 @@ class LoadFeedDaily extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Load all the feeds from the enabled publishers.';
 
     protected $scrapper;
 
