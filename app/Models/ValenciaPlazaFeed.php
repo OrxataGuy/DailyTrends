@@ -2,13 +2,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Goutte\Client;
 
 class ValenciaPlazaFeed extends Feed
 {
     use HasFactory;
 
-    public function getFeed (Client $scrapper, Publisher $publisher)
+    public function loadFeed (Client $scrapper, Publisher $publisher)
     {
         $endpoints =  $scrapper->request('GET', $publisher->site)
         ->filter('article>div>h2>a')->each(function ($node) use ($publisher) {
@@ -27,21 +28,26 @@ class ValenciaPlazaFeed extends Feed
                 $image = self::getSource($crawler->filter('.image'));
                 if (!$image) $image = self::getSource($crawler->filter('img'), 1);
                 $body = self::getHtml($crawler->filter('.html-content'));
-
-                if($body && $source)
+                $date = self::getText($crawler->filter('.noticia__fecha'));
+                $string_date = intval(now()->format('d')).now()->format('/m/Y');
+                if($body && $source && str_contains($date, $string_date))
                 {
-                    Feed::create([
-                        'title' => $title,
-                        'body' => $body,
-                        'image' => $publisher->site.$image,
-                        'source' => $source,
-                        'publisher' => $publisher->name,
-                        'publisher_id' => $publisher->id
-                    ]);
+                    try
+                    {
+                        Feed::create([
+                            'title' => $title,
+                            'body' => $body,
+                            'image' => $publisher->site.$image,
+                            'source' => $source,
+                            'publisher' => $publisher->name,
+                            'publisher_id' => $publisher->id
+                        ]);
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        error_log("No he podido poner esta noticia de $publisher->name porque es demasiado grande: $source");
+                    }
                 }
             }
         }
-
-        return $publisher->lastNews($scrapper);
     }
 }

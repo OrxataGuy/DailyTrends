@@ -23,13 +23,14 @@ class DatabaseSeeder extends Seeder
         Publisher::create([
             'site' => env('app_url'),
             'name' => 'DailyTrends',
-            'icon' => ''
+            'icon' => '',
+            'enabled' => 1
         ]);
 
         Publisher::create([
-            'site' => 'https://www.elmundo.com',
+            'site' => 'https://www.elmundo.es',
             'name' => 'ElMundo',
-            'icon' => 'https://www.elmundo.com/recursos/images/iconos-top/iconos-top_08.png'
+            'icon' => 'https://www.elmundo.es/favicon_32x32.png'
         ]);
 
         Publisher::create([
@@ -54,7 +55,7 @@ class DatabaseSeeder extends Seeder
 
         Publisher::create([
             'site' => 'https://valenciaplaza.com',
-            'name' => 'ValenciaPlaza',
+            'name' => 'VPlaza',
             'icon' => 'https://valenciaplaza.com/favicon.ico'
         ]);
         // \App\Models\User::factory(10)->create();

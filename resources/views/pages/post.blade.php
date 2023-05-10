@@ -1,57 +1,41 @@
 @extends('layouts.post')
-@section('publisher', 'MARCA')
-@section('title', 'Lorem Ipsum')
+@section('publisher', $post->publisher)
+@section('title', $post->title)
 @section('content')
 <div class="container">
     <div class="row">
         <div class="col-md-8">
             <div class="single-post">
-                <div class="blog-post-item cat-1 box">
+                <div class="blog-post-item cat-{{ $post->publisher_id }} box">
                     <div class="blog-post-images">
-                        <a class="hover-images" href="#" title="Post"><img class="img-responsive" src="{{ env('app_url') }}/assets/images/blog/23.jpg" alt=""></a>
+                        <a class="hover-images" href="#" title="Post"><img class="img-responsive" src="{{$post->image }}" alt="{{ $post->title }}"></a>
                     </div>
                     <div class="content">
-                        <h3>Facebook's website now uses HTML5 instead of Flash forall videos</h3>
+                        <h3>{{ $post->title }}</h3>
                         <div class="tag">
-                            <p class="label">Techology</p>
+                            <p class="label">{{ $post->publisher }}</p>
                             <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
                         </div>
-                        <p>Adipisicing nam cras consequat ipsum. Donec excepteur aptent incididunt class. Congue natoque varius bibendum primis. Maecenas fermentum integer eleifend feugiat nisi.</p>
-                        <p>Ac nostrud porta lacinia vulputate. Volutpat etiam inceptos sociosqu eros. Ut tristique nascetur pede pretium diam. Ut fames ac do condimentum mi. Laoreet imperdiet eros aliquip feugiat fugiat. Euismod placerat pharetra malesuada porttitor habitant. Posuere ipsum iaculis curabitur imperdiet tristique.</p>
-                        <div class="row content-text">
-                            <div class="col-md-6 bold border">
-                                <p>Adipisicing nam cras consequat ipsum. Donec excepteur aptent incididunt class. Congue natoque varius maecenas feugiat nisi.</p>
-                            </div>
-                            <!-- End col-md-6 -->
-                            <div class="col-md-6">
-                                <p>Adipisicing nam cras consequat ipsum. Donec excepteur aptent incididunt class. Congue natoque varius bibendum primis. Maecenas fermentum integer eleifend feugiat nisi.</p>
-                            </div>
-                            <!-- End col-md-6 -->
-                        </div>
-                        <!-- End content-text -->
-                        <p>Adipisicing nam cras consequat ipsum. Donec excepteur aptent incididunt class. Congue natoque varius bibendum primis. Maecenas fermentum integer eleifend feugiat nisi.</p>
-                        <p>Ac nostrud porta lacinia vulputate. Volutpat etiam inceptos sociosqu eros. Ut tristique nascetur pede pretium diam. Ut fames ac do condimentum mi. Laoreet imperdiet eros aliquip feugiat fugiat. Euismod placerat pharetra malesuada porttitor habitant. Posuere ipsum iaculis curabitur imperdiet tristique. Nostra pretium per scelerisque enim conubia. Praesent id justo bibendum pede. Congue magna mus venenatis vestibulum. Lectus magna sollicitudin per aliquip nullam.</p>
-                        <p>Anim tincidunt odio massa esse per. Nisl neque iaculis ad urna non. Metus vestibulum tortor occaecat dolor. Hendrerit euismod quam excepteur ut. Mollis ante nulla nibh ex. Arcu torquent maecenas lectus vulputate</p>
-                        <p>Tortor nunclorem anim nibh molestie. Ad sint litora faucibus elit. Eros lacinia esse reprehenderit gravida. Ut iaculis incididunt deserunt proident. Lacinia turpis porttitor ullamco lacus. Ea aliquip tincidunt placerat nisl. Justo habitant ea nulla fringilla.</p>
-                        <p>Ullamcorper taciti class justo eros. Pede fusce dapibus vehicula porta cras. Malesuada eros minim accumsan ultrices. Praesent massa auctor vel scelerisque vulputate. Curabitur rhoncus ultrices sunt ipsum pariatur. Commodo donec nascetur nisl vehicula. Congue incididunt pellentesque rhoncus scelerisque a. Morbi tempus habitant ad proident.</p>
+
+                        {!! $post->body !!}
                     </div>
                     <div class="pagination">
                         <div class="prev">
-                            <a href="#" title="prev">
+                            <a href="{{ env('app_url') }}/post/{{ $post->getPrevious()->id }}" title="prev">
                                 <div class="icon-box">
                                     <i class="icon"></i>
                                 </div>
                                 <div class="text">
-                                    <p class="control">PREVIOUS POST</p>
-                                    <p class="title">Mossberg: The next big thing didn't show up this year</p>
+                                    <p class="control">ARTÍCULO ANTERIOR</p>
+                                    <p class="title">{{ $post->getPrevious()->title }}</p>
                                 </div>
                             </a>
                         </div>
                         <div class="next">
-                            <a href="#" title="next">
+                            <a href="{{ env('app_url') }}/post/{{ $post->getNext()->id }}" title="next">
                                 <div class="text">
-                                    <p class="control">NEXT POST</p>
-                                    <p class="title">Tim Cook calls Apple tax evasion cla\ims 'total political crap</p>
+                                    <p class="control">SIGUIENTE ARTÍCULO</p>
+                                    <p class="title">{{ $post->getNext()->title }}</p>
                                 </div>
                                 <div class="icon-box">
                                     <i class="icon"></i>
@@ -65,34 +49,20 @@
                     </div>
                     <!-- End title -->
                     <div class="slider-two-item box float-left space-40 nav-ver2 nav-white">
-                        <div class="post-item ver3 overlay">
-                            <div class="wrap-images">
-                                <a class="images" href="#" title="images"><img class='img-responsive' src="{{ env('app_url') }}/assets/images/blog/9.jpg" alt="images"></a>
-                            </div>
-                            <div class="text">
-                                <h2><a href="" title="title">The Perfect theme for Games</a></h2>
-                                <div class="tag">
-                                    <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                        @foreach($post->getRelated(5) as $related)
+                            <div class="post-item ver3 overlay">
+                                <div class="wrap-images">
+                                    <a class="images related-img" href="{{ env('app_url') }}/post/{{ $related->id }}" title="images"><img class='img-responsive related-img' src="{{ $related->image }}" alt="images"></a>
                                 </div>
-                                <p>Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut eros et nisl sagittis vestibulum. Donec mollis hendrerit risus...</p>
-                                <a class="read-more" href="#" title="read more">read more</a>
-                            </div>
-                        </div>
-                        <!-- End item -->
-                        <div class="post-item ver3 overlay">
-                            <div class="wrap-images">
-                                <a class="images" href="#" title="images"><img class='img-responsive' src="{{ env('app_url') }}/assets/images/blog/9.jpg" alt="images"></a>
-                            </div>
-                            <div class="text">
-                                <h2><a href="" title="title">The Perfect theme for Games</a></h2>
-                                <div class="tag">
-                                    <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                                <div class="text">
+                                    <h2><a href="" title="title">{{ $related->title }}</a></h2>
+                                    <div class="tag">
+                                        <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                                    </div>
+                                    <a class="read-more" href="#" title="read more">Leer artículo</a>
                                 </div>
-                                <p>Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut eros et nisl sagittis vestibulum. Donec mollis hendrerit risus...</p>
-                                <a class="read-more" href="#" title="read more">read more</a>
                             </div>
-                        </div>
-                        <!-- End item -->
+                        @endforeach
                     </div>
                     <!-- End slider -->
 
@@ -108,3 +78,110 @@
     <i class="fa fa-long-arrow-up"></i>
 </div>
 @endsection
+
+@section('styles')
+<style>
+    img {
+        vertical-align: middle;
+        height: auto;
+        width: 50em;
+    }
+
+    img[src*="/assets/images/logo.png"] {
+        vertical-align: middle;
+        height: auto;
+        width: auto;
+    }
+
+    img.img-responsive {
+        height: auto;
+        width: 50em;
+    }
+    .link {
+        display: initial;
+    }
+
+    .related-img {
+        height: 240px;
+        max-height: 240px;
+    }
+</style>
+@endsection
+
+@section('scripts')
+<script>
+    initialize()
+    var feeds;
+    function loadFeed() {
+        return $.ajax({
+            method: 'GET',
+            url: "{{ route('feed') }}"
+        });
+    }
+
+    function initialize() {
+        loadFeed().then(res => {
+            feeds = res.value;
+            mountMayLikeFeeds()
+        })
+    }
+
+    function deletePost(id) {
+        Swal.fire({
+            title: "Espera un segundo",
+            html: "<p>Si borras este artículo, no se volverá a recargar. Sabiendo esto...</p><br/><h1>¿Quieres borrar el artículo?</h1>",
+            icon: 'warning',
+            confirmButtonText: 'Sí',
+            confirmButtonColor: '#db2e1c',
+            showDenyButton: true,
+            denyButtonText: 'No',
+            denyButtonColor: 'darkgray',
+        }).then(res => {
+            if(res.isConfirmed) _deletePost(id)
+        })
+    }
+
+    function _deletePost(id) {
+        $.ajax({
+            method: 'DELETE',
+            url: "{{ route('article.destroy', ['article' => ':id']) }}".replace(':id', id),
+            success: Swal.fire({
+                title: "Artículo borrado correctamente",
+                text: "Se le va a redirigir a la página de inicio",
+                confirmButtonColor: '#db2e1c',
+            }).then(e => {location.href = "{{ route('index') }}"}),
+        });
+    }
+
+    function mountMayLikeFeeds() {
+        const container = $('.aside-right-news')[0],
+            templateFirst = feed => {
+                return `<div class="post-item ver1 overlay">
+                <a class="images" href="{{ env('app_url') }}/post/${feed.id}" title="images"><img class='img-responsive' src="${feed.image}" alt="images"></a>
+                    <div class="text">
+                        <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
+                        <div class="tag">
+                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                        </div>
+                    </div>
+                </div>`
+            },
+            count = 10,
+            template = feed => {
+                return `<div class="post-item ver2 overlay">
+                <a class="images" href="{{ env('app_url') }}/post/${feed.id}" title="images"><img class='img-responsive' src="${feed.image}" alt="images"></a>
+                    <div class="text">
+                        <h2><a href="{{ env('app_url') }}/post/${feed.id}" title="${feed.title}">${feed.title}</a></h2>
+                        <div class="tag">
+                            <p class="date"><i class="fa fa-clock-o"></i>May 06,2014</p>
+                        </div>
+                    </div>
+                </div>`
+            };
+            for(let i=0; i<count; i++)
+                if(i==0) $(container).append(templateFirst(feeds[i]))
+                else $(container).append(template(feeds[i]))
+    }
+</script>
+@endsection
+
